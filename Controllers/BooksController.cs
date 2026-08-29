@@ -33,6 +33,11 @@ public class BooksController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+        
         Book? book = books.FirstOrDefault(book => book.Id == id);
         if (book == null)
         {
@@ -45,5 +50,43 @@ public class BooksController : ControllerBase
     public IActionResult Post(Book book)
     {
         return Created("api/books/15",book);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult PutById(int id, Book updateBook)
+    {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
+        Book? book = books.FirstOrDefault(book => book.Id == id);
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        book.Title = updateBook.Title;
+        book.Author = updateBook.Author;
+        return Ok(updateBook);
+
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteById(int id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
+        Book? book = books.FirstOrDefault(book => book.Id == id);
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        books.Remove(book);
+        return NoContent();
     }
 }
